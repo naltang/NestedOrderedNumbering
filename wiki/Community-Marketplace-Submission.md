@@ -21,17 +21,17 @@ plugin directory.
 
 ## Before submitting
 
-- [ ] `pnpm test` passes.
-- [ ] `pnpm lint` passes.
-- [ ] `pnpm build` passes.
-- [ ] `pnpm release:check` passes.
+- [x] `pnpm test` passes.
+- [x] `pnpm lint` passes.
+- [x] `pnpm build` passes.
+- [x] `pnpm release:check` passes.
 - [ ] `manifest.json`, `package.json`, and the Git tag use the same version.
-- [ ] `versions.json` maps that version to the minimum Obsidian version.
+- [x] `versions.json` maps that version to the minimum Obsidian version.
 - [ ] The GitHub release contains `main.js`, `manifest.json`, and `styles.css`.
 - [ ] Manual installation from the release was tested in a clean Vault.
-- [ ] Enter, Tab, Shift+Tab, multi-line selection, and one-step undo were tested.
+- [x] Enter, Tab, Shift+Tab, multi-line selection, and one-step undo were tested.
 - [ ] The default theme and at least one community theme were checked.
-- [ ] README, Wiki, changelog, license, security policy, and issue templates are public.
+- [x] README, Wiki, changelog, license, security policy, and issue templates are public.
 
 ## Submission notes
 
@@ -49,3 +49,9 @@ plugin directory.
 3. Link the GitHub account that owns this repository.
 4. Submit `https://github.com/spark00000/NestedOrderedNumbering`.
 5. Address automated and reviewer feedback without changing the plugin ID.
+
+## Official references
+
+- [Submit your plugin](https://docs.obsidian.md/plugins/releasing/submit-plugin)
+- [Submission requirements](https://docs.obsidian.md/community-directory/submission-requirements-for-plugins)
+- [Developer policies](https://docs.obsidian.md/community-directory/developer-policies)

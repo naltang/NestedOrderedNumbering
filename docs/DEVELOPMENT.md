@@ -9,6 +9,9 @@
 - `tests/model.test.ts` verifies numbering behavior without launching Obsidian.
 - `esbuild.config.mjs` creates the CommonJS `main.js` release artifact.
 
+`main.js` is generated and ignored by Git. Build it locally for testing; the release
+workflow rebuilds it from the tagged source and uploads it as a release attachment.
+
 The model returns the complete intended text and selection. The integration layer
 calculates a minimal change and dispatches exactly one transaction. Keep this rule
 for every new editor operation so Ctrl+Z remains atomic.

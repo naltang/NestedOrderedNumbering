@@ -29,6 +29,8 @@ Every GitHub release must attach matching copies of:
 
 The tag must be the exact manifest version without a `v` prefix. The GitHub Actions
 release workflow validates, builds, and publishes these assets automatically.
+`main.js` is a generated file and is intentionally absent from the source branch;
+it must be attached to the GitHub release as an individual file.
 
 ## Versioning
 

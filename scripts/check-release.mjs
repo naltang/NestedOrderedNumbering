@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 
 const errors = [];
 const required = [
@@ -20,6 +21,34 @@ const versions = JSON.parse(readFileSync("versions.json", "utf8"));
 if (!/^\d+\.\d+\.\d+$/.test(manifest.version)) {
   errors.push("manifest.version must use x.y.z Semantic Versioning.");
 }
+if (!/^[a-z0-9-]+$/.test(manifest.id)) {
+  errors.push("manifest.id must contain only lowercase letters, numbers, and hyphens.");
+}
+if (manifest.id.includes("obsidian") || manifest.id.endsWith("plugin")) {
+  errors.push("manifest.id must not contain obsidian or end with plugin.");
+}
+if (/obsidian|\bplugin\b/i.test(manifest.name)) {
+  errors.push("manifest.name must not include Obsidian or Plugin.");
+}
+if (
+  typeof manifest.description !== "string" ||
+  manifest.description.length === 0 ||
+  manifest.description.length > 250
+) {
+  errors.push("manifest.description must contain 1-250 characters.");
+}
+if (/^this (is a )?plugin\b/i.test(manifest.description)) {
+  errors.push("manifest.description must not start with 'This plugin'.");
+}
+if (/obsidian/i.test(manifest.description)) {
+  errors.push("manifest.description must not include the word Obsidian.");
+}
+if (!/[.?!)]$/.test(manifest.description)) {
+  errors.push("manifest.description must end with punctuation.");
+}
+if (typeof manifest.isDesktopOnly !== "boolean") {
+  errors.push("manifest.isDesktopOnly must be a boolean.");
+}
 if (manifest.version !== packageJson.version) {
   errors.push("package.json and manifest.json versions do not match.");
 }
@@ -32,8 +61,13 @@ if (!manifest.author || manifest.author.startsWith("TODO_")) {
 if (!packageJson.repository || !packageJson.bugs || !packageJson.homepage) {
   errors.push("Add repository, bugs, and homepage URLs to package.json.");
 }
-if (manifest.id.includes("obsidian")) {
-  errors.push("The plugin id must not contain the word obsidian.");
+try {
+  execFileSync("git", ["ls-files", "--error-unmatch", "main.js"], {
+    stdio: "ignore",
+  });
+  errors.push("main.js is generated and must not be tracked on the source branch.");
+} catch {
+  // Expected: main.js exists after the build, but is ignored by Git.
 }
 
 if (errors.length > 0) {
@@ -41,4 +75,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`Release ${manifest.version} is ready.`);
+console.log(`Release ${manifest.version} is ready for Community directory packaging.`);

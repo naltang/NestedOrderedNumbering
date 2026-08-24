@@ -136,16 +136,21 @@ pnpm install
 pnpm test
 pnpm lint
 pnpm build
+pnpm release:check
 ```
+
+`main.js` is generated locally and intentionally excluded from the source branch.
+Each GitHub release publishes the built `main.js` together with `manifest.json`
+and `styles.css`, which are the files Obsidian installs.
 
 See [Development](docs/DEVELOPMENT.md), [Usage](docs/USAGE.md), and
 [Publishing](docs/PUBLISHING.md) for details.
 
 ## Release status
 
-Repository metadata, automated checks, release assets, documentation, and the
-Community directory submission checklist are prepared. Run the release gate before
-publishing every tag as described in [Publishing](docs/PUBLISHING.md).
+The public repository, automated checks, documentation, and Community directory
+submission checklist are prepared for the `0.3.1` release. Run the release gate
+before publishing every tag as described in [Publishing](docs/PUBLISHING.md).
 
 ## License
 

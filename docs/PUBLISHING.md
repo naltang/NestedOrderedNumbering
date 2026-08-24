@@ -2,8 +2,7 @@
 
 ## One-time repository setup
 
-1. Push the `main` branch to
-   `https://github.com/spark00000/NestedOrderedNumbering`.
+1. Confirm `https://github.com/spark00000/NestedOrderedNumbering` is public.
 2. Confirm the public author is `spark00000` in `manifest.json`.
 3. Confirm the plugin ID `nested-ordered-numbering` is still unique.
 4. Confirm the Wiki and README installation instructions match the release.
@@ -33,6 +32,8 @@ version without a `v` prefix, for example `0.3.1`.
 
 The release workflow validates the tag, tests and builds the source, then creates a
 GitHub release containing `main.js`, `manifest.json`, and `styles.css`.
+`main.js` is intentionally ignored on the source branch and must exist as an
+individual release attachment, not only inside GitHub's source archives.
 
 ## Obsidian Community directory
 
@@ -48,3 +49,9 @@ The exact listing metadata and final checklist are maintained in the Wiki page
 
 The repository root must continue to contain `README.md`, `LICENSE`, and
 `manifest.json`. The GitHub release tag must match the manifest version exactly.
+
+Official references:
+
+- [Submit your plugin](https://docs.obsidian.md/plugins/releasing/submit-plugin)
+- [Submission requirements](https://docs.obsidian.md/community-directory/submission-requirements-for-plugins)
+- [Developer policies](https://docs.obsidian.md/community-directory/developer-policies)
