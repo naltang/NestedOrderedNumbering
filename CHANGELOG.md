@@ -3,6 +3,18 @@
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and use [Semantic Versioning](https://semver.org/).
 
+## [0.3.2] - 2026-08-24
+
+### Fixed
+
+- Updated CI and release automation to Node.js 22 for pnpm 11.19 compatibility.
+
+### Changed
+
+- Kept generated `main.js` out of the source branch and published it only as a
+  GitHub release asset.
+- Added stricter Community directory manifest and packaging checks.
+
 ## [0.3.1] - 2026-08-24
 
 ### Fixed

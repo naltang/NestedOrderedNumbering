@@ -27,6 +27,8 @@ pnpm build
 pnpm dev
 ```
 
+Development requires Node.js 22.13 or newer and pnpm 11.
+
 Use a disposable vault for manual testing. Copy `main.js`, `manifest.json`, and
 `styles.css` into
 `.obsidian/plugins/nested-ordered-numbering/`, reload Obsidian, and enable the plugin.

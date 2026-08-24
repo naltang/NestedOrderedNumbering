@@ -129,7 +129,7 @@ Nested Ordered Numbering is local-only. It has:
 
 ## Development
 
-Requirements: Node.js 18+ and pnpm 11.
+Requirements: Node.js 22.13+ and pnpm 11.
 
 ```bash
 pnpm install
@@ -149,7 +149,7 @@ See [Development](docs/DEVELOPMENT.md), [Usage](docs/USAGE.md), and
 ## Release status
 
 The public repository, automated checks, documentation, and Community directory
-submission checklist are prepared for the `0.3.1` release. Run the release gate
+submission checklist are prepared for the `0.3.2` release. Run the release gate
 before publishing every tag as described in [Publishing](docs/PUBLISHING.md).
 
 ## License
