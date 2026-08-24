@@ -148,9 +148,11 @@ See [Development](docs/DEVELOPMENT.md), [Usage](docs/USAGE.md), and
 
 ## Release status
 
-The public repository, automated checks, documentation, and Community directory
-submission checklist are prepared for the `0.3.2` release. Run the release gate
-before publishing every tag as described in [Publishing](docs/PUBLISHING.md).
+Release [`0.3.2`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.2)
+is published with verified `main.js`, `manifest.json`, and `styles.css` assets. The
+remaining pre-submission checks are the documented manual Vault and theme tests.
+Run the release gate before every future tag as described in
+[Publishing](docs/PUBLISHING.md).
 
 ## License
 

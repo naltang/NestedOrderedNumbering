@@ -11,6 +11,7 @@ plugin directory.
 | Plugin ID | `nested-ordered-numbering` |
 | Author | `spark00000` |
 | Repository | `spark00000/NestedOrderedNumbering` |
+| Current release | [`0.3.2`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.2) |
 | Minimum Obsidian version | `1.5.0` |
 | Desktop only | No |
 | License | MIT |
@@ -25,13 +26,17 @@ plugin directory.
 - [x] `pnpm lint` passes.
 - [x] `pnpm build` passes.
 - [x] `pnpm release:check` passes.
-- [ ] `manifest.json`, `package.json`, and the Git tag use the same version.
+- [x] `manifest.json`, `package.json`, and the Git tag use the same version.
 - [x] `versions.json` maps that version to the minimum Obsidian version.
-- [ ] The GitHub release contains `main.js`, `manifest.json`, and `styles.css`.
+- [x] The GitHub release contains `main.js`, `manifest.json`, and `styles.css`.
 - [ ] Manual installation from the release was tested in a clean Vault.
 - [x] Enter, Tab, Shift+Tab, multi-line selection, and one-step undo were tested.
 - [ ] The default theme and at least one community theme were checked.
 - [x] README, Wiki, changelog, license, security policy, and issue templates are public.
+
+The two unchecked manual checks are intentionally left open until the release files
+are installed in a clean Vault and visually checked with the default theme and one
+community theme.
 
 ## Submission notes
 
