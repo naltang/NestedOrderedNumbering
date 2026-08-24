@@ -1,0 +1,46 @@
+{
+  "name": "nested-ordered-numbering",
+  "version": "0.3.1",
+  "description": "Obsidian plugin for text-based hierarchical ordered numbering.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit --skipLibCheck && node esbuild.config.mjs production",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "release:check": "node scripts/check-release.mjs",
+    "version": "node scripts/version-bump.mjs"
+  },
+  "keywords": ["obsidian", "numbering", "outline"],
+  "author": "spark00000",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/spark00000/NestedOrderedNumbering.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spark00000/NestedOrderedNumbering/issues"
+  },
+  "homepage": "https://github.com/spark00000/NestedOrderedNumbering#readme",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.38.6",
+    "@types/node": "^22.15.17",
+    "esbuild": "0.25.5",
+    "eslint": "^9.39.4",
+    "eslint-plugin-obsidianmd": "^0.4.0",
+    "globals": "^17.6.0",
+    "jiti": "^2.6.1",
+    "obsidian": "latest",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.59.1",
+    "vitest": "^3.2.4"
+  }
+}

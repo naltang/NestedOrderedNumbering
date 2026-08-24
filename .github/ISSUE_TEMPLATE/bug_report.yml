@@ -1,0 +1,59 @@
+name: Bug report
+description: Report reproducible numbering, indentation, or editor behavior.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve Nested Ordered Numbering.
+  - type: input
+    id: obsidian-version
+    attributes:
+      label: Obsidian version
+      placeholder: 1.x.x
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: 0.3.1
+    validations:
+      required: true
+  - type: input
+    id: theme
+    attributes:
+      label: Theme
+      placeholder: Default, AnuPpuccin, Minimal, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: other-plugins
+    attributes:
+      label: Related plugins
+      description: List enabled outline, list, or editor plugins.
+  - type: textarea
+    id: example
+    attributes:
+      label: Minimal numbered text
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true

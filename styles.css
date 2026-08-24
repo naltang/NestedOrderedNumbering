@@ -1,0 +1,41 @@
+/*
+ * Obsidian parses a root `1.` as a Markdown list marker, then parses lines with
+ * four or more leading spaces as list continuations or indented code. This
+ * plugin's prefixes are plain-text hierarchy markers, so those built-in visual
+ * offsets would make the first levels jump by different amounts. The editor
+ * extension adds this class only to lines accepted by the plugin parser.
+ */
+.markdown-source-view.mod-cm6 .cm-line.nested-ordered-numbering-line {
+  tab-size: 2;
+}
+
+.markdown-source-view.mod-cm6
+  .cm-line.nested-ordered-numbering-line
+  .cm-formatting-list-ol {
+  padding-inline-start: 0 !important;
+}
+
+.markdown-source-view.mod-cm6
+  .cm-line.nested-ordered-numbering-line
+  .cm-indent,
+.markdown-source-view.mod-cm6
+  .cm-line.nested-ordered-numbering-line
+  .cm-indent-spacing:last-child {
+  min-width: 0 !important;
+  padding-inline-start: 0 !important;
+}
+
+.markdown-source-view.mod-cm6
+  .cm-line.nested-ordered-numbering-line.HyperMD-codeblock {
+  padding-inline-start: 0 !important;
+  font-family: var(--font-text) !important;
+  font-size: var(--font-text-size) !important;
+  color: var(--text-normal);
+  direction: inherit;
+}
+
+.cm-s-obsidian
+  div.cm-line.nested-ordered-numbering-line.HyperMD-codeblock-bg {
+  background-color: transparent;
+  border-width: 0;
+}

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Nested Ordered Numbering</title>
+  <desc id="desc">A purple Obsidian-inspired banner showing hierarchical numbers ending with periods.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17152b"/>
+      <stop offset="0.55" stop-color="#29204d"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c4b5fd"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="24"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="360" rx="28" fill="url(#background)"/>
+  <circle cx="1060" cy="50" r="190" fill="#7c3aed" opacity="0.18" filter="url(#glow)"/>
+  <circle cx="150" cy="330" r="170" fill="#4f46e5" opacity="0.14" filter="url(#glow)"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-weight="700">
+    <text x="76" y="104" font-size="48" fill="#ddd6fe">1.</text>
+    <text x="118" y="174" font-size="48" fill="#c4b5fd">1.1.</text>
+    <text x="160" y="244" font-size="48" fill="#a78bfa">1.1.1.</text>
+    <text x="202" y="314" font-size="48" fill="#8b5cf6">1.1.1.1.</text>
+  </g>
+  <g stroke="url(#accent)" stroke-width="3" opacity="0.45">
+    <path d="M92 122v194"/>
+    <path d="M134 192v124"/>
+    <path d="M176 262v54"/>
+  </g>
+  <text x="470" y="150" font-family="Inter, Segoe UI, sans-serif" font-size="58" font-weight="750" fill="#ffffff">Nested Ordered</text>
+  <text x="470" y="218" font-family="Inter, Segoe UI, sans-serif" font-size="58" font-weight="750" fill="url(#accent)">Numbering</text>
+  <text x="474" y="270" font-family="Inter, Segoe UI, sans-serif" font-size="24" fill="#cbd5e1">Plain-text hierarchy · final period guaranteed</text>
+  <rect x="470" y="292" width="340" height="4" rx="2" fill="url(#accent)"/>
+</svg>
