@@ -4,8 +4,10 @@
 
 1. Confirm `https://github.com/spark00000/NestedOrderedNumbering` is public.
 2. Confirm the public author is `spark00000` in `manifest.json`.
-3. Confirm the plugin ID `nested-ordered-numbering` is still unique.
-4. Confirm the Wiki and README installation instructions match the release.
+3. Confirm the short description is the final public listing text and matches the
+   Community directory submission form.
+4. Confirm the plugin ID `nested-ordered-numbering` is still unique.
+5. Confirm the Wiki and README installation instructions match the release.
 
 Run the release gate before tagging:
 
@@ -43,6 +45,12 @@ After the GitHub release exists:
 2. Link the GitHub account that owns the repository.
 3. Add the plugin using the public repository URL.
 4. Resolve all automated review errors and warnings.
+
+The directory reads listing metadata from the committed `manifest.json` at the
+default branch HEAD and installs assets from the release tag matching its version.
+An older manually installed Vault copy can therefore show stale author or
+description text even when the public repository is correct; replace all three
+local release files before evaluating the listing metadata in Obsidian.
 
 The exact listing metadata and final checklist are maintained in the Wiki page
 `Community Marketplace Submission`.

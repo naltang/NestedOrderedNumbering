@@ -11,14 +11,14 @@ plugin directory.
 | Plugin ID | `nested-ordered-numbering` |
 | Author | `spark00000` |
 | Repository | `spark00000/NestedOrderedNumbering` |
-| Current release | [`0.3.2`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.2) |
+| Current release | [`0.3.3`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.3) |
 | Minimum Obsidian version | `1.5.0` |
 | Desktop only | No |
 | License | MIT |
 
 **Short description**
 
-> Create hierarchical text numbering that always ends with a period.
+> Create and maintain hierarchical plain-text numbering with a trailing period at every depth.
 
 ## Before submitting
 
@@ -33,6 +33,7 @@ plugin directory.
 - [x] Enter, Tab, Shift+Tab, multi-line selection, and one-step undo were tested.
 - [ ] The default theme and at least one community theme were checked.
 - [x] README, Wiki, changelog, license, security policy, and issue templates are public.
+- [x] Public author and short description match `manifest.json`.
 
 The two unchecked manual checks are intentionally left open until the release files
 are installed in a clean Vault and visually checked with the default theme and one

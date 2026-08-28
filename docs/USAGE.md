@@ -29,9 +29,10 @@ can assign suggested keys such as Ctrl+Alt+N, Ctrl+Alt+D, and Ctrl+Alt+R.
 
 ## Blocks and indentation
 
-Consecutive recognized numbered lines form one block. A blank or unnumbered line
-starts a new block. The plugin writes two leading spaces per depth; together with
-the growing number prefix this keeps content at four-column intervals.
+Recognized numbered lines may be separated by blank lines and still form one block.
+An ordinary nonblank, unnumbered line starts a new block. The plugin writes two
+leading spaces per depth; together with the growing number prefix this keeps
+content at four-column intervals.
 
 In Live Preview, the plugin also removes Obsidian's built-in Markdown list and
 indented-code offsets from recognized lines. This keeps the first, second, and

@@ -32,3 +32,38 @@ pnpm dev                                   # esbuild watch
 ## Manual testing
 
 Use a disposable vault, never a primary one: copy `main.js`, `manifest.json`, and `styles.css` into `<vault>/.obsidian/plugins/nested-ordered-numbering/`, then reload Obsidian and enable the plugin.
+
+## Project constraints
+
+- Every recognized prefix must end with a period and whitespace. Never delegate
+  hierarchical numbering to Markdown's ordered-list implementation.
+- Blank lines may occur inside one numbered block. A nonblank, unnumbered line is
+  the boundary between independent blocks.
+- Keep public source and documentation on `main`. Keep `doc/AGENT.MD` and
+  `doc/TASK.MD` only in the nested local Git repository under `doc/`; never add
+  that directory to the public repository or configure a remote for it.
+- Use Git commits and local checkpoint refs for rollback. Do not create sibling
+  `NestedOrderedNumbering.backup-*` directories.
+
+## Lessons learned
+
+- A Vault can keep an old `manifest.json` while running a newer `main.js`. Verify
+  all three installed artifacts before diagnosing author, description, or version
+  mismatches.
+- Enter followed by Tab must renumber the whole related block, including numbered
+  items after blank lines. Keep this workflow covered by an automated regression
+  test.
+- A plugin does not appear in Community Plugins search until its public release is
+  submitted and accepted; a valid GitHub release alone is not a directory listing.
+
+## Recovery history
+
+- 2026-08-28: pre-sync checkpoint `checkpoint/pre-agent-sync-20260828` points to
+  `8841b4ed2b1055e92ccb7f3675edddf0ffbea137`. PR 1 was applied by fast-forward;
+  restore from that ref if the sync must be undone.
+- 2026-08-28: release-candidate checkpoint
+  `refs/checkpoints/pre-0.3.3-release-gate` points to Git snapshot
+  `5b314df593e39c4248fd14a02dc7444aac716745`.
+- 2026-08-28: the isolated `doc/` repository preserved the original task at
+  `3e20296f902bc503aae8ac8356a5b3b4421fef00` and committed the local-only major
+  prompts at `14acf422ba9084a94e0deff92aa02053b6ad98bf`; it has no remote.

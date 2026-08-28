@@ -41,6 +41,8 @@ Use a disposable vault for manual testing. Copy `main.js`, `manifest.json`, and
 - Root Shift+Tab produces plain text.
 - Multi-line selections remain atomic.
 - Insert/delete operations renumber neighboring blocks.
+- Inserting a root item and then indenting it restores every downstream root
+  number, including across blank lines.
 - Legacy indentation normalizes to the fixed-width layout.
 - The first three Tab levels move by the same visible interval in Live Preview.
 - Outliner remains enabled during manual conflict testing.

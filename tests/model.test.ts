@@ -58,6 +58,10 @@ describe("renumbering", () => {
   it("keeps separate blocks independent", () => {
     expect(renumberText("9. One\nplain text\n8. Two")).toBe("1. One\nplain text\n1. Two");
   });
+
+  it("continues one numbered block across blank lines", () => {
+    expect(renumberText("9. One\n\n8. Two")).toBe("1. One\n\n2. Two");
+  });
 });
 
 describe("editing transforms", () => {
@@ -74,6 +78,16 @@ describe("editing transforms", () => {
     const cursor = input.indexOf("Beta");
     const result = transformIndent(input, { anchor: cursor, head: cursor }, "indent");
     expect(result?.text).toBe("1. Alpha\n  1.1. Beta\n    1.1.1. Child\n2. Gamma");
+  });
+
+  it("restores a downstream root number when an inserted item becomes a child", () => {
+    const input = "1. First\n\n2. Second";
+    const cursor = input.indexOf("\n");
+    const entered = transformEnter(input, { anchor: cursor, head: cursor });
+    expect(entered?.text).toBe("1. First\n2. \n\n3. Second");
+
+    const indented = entered && transformIndent(entered.text, entered.selection, "indent");
+    expect(indented?.text).toBe("1. First\n  1.1. \n\n2. Second");
   });
 
   it("Shift+Tab outdents the current item and its subtree", () => {

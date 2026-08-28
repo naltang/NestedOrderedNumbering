@@ -46,6 +46,8 @@ block in one undoable editor transaction.
 - Shift+Tab outdents a subtree; at the root it converts the item to plain text.
 - Multi-line selections are supported.
 - Insert, delete, and renumber commands update the related contiguous block.
+- Blank lines may separate items inside one numbered block; ordinary text still
+  starts a new block.
 - Each operation uses one editor transaction, so one undo restores the entire edit.
 - Recognized numbering is handled before conflicting Outliner keymaps.
 - Legacy four-space or tab-indented blocks normalize automatically.
@@ -148,7 +150,7 @@ See [Development](docs/DEVELOPMENT.md), [Usage](docs/USAGE.md), and
 
 ## Release status
 
-Release [`0.3.2`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.2)
+Release [`0.3.3`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.3)
 is published with verified `main.js`, `manifest.json`, and `styles.css` assets. The
 remaining pre-submission checks are the documented manual Vault and theme tests.
 Run the release gate before every future tag as described in

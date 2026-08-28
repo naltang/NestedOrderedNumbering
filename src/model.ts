@@ -152,6 +152,9 @@ export function transformIndent(
   }
   const subtreeIndent = indentationColumns(lastParsed.indent);
   for (let line = last + 1; line < oldLines.length; line += 1) {
+    if (isBlankLine(oldLines[line])) {
+      continue;
+    }
     const parsed = parseNumberedLine(oldLines[line]);
     if (!parsed || indentationColumns(parsed.indent) <= subtreeIndent) {
       break;
@@ -170,6 +173,9 @@ export function transformIndent(
     const currentColumns = indentationColumns(firstParsed.indent);
     let hasPreviousSibling = false;
     for (let line = first - 1; line >= bounds.start; line -= 1) {
+      if (isBlankLine(oldLines[line])) {
+        continue;
+      }
       const parsed = parseNumberedLine(oldLines[line]);
       if (!parsed) {
         break;
@@ -282,31 +288,49 @@ function renumberLines(lines: string[], touchStart: number, touchEnd: number): v
       continue;
     }
     const blockStart = line;
-    while (line + 1 < lines.length && parseNumberedLine(lines[line + 1])) {
-      line += 1;
+    let blockEnd = line;
+    let scan = line + 1;
+    while (scan < lines.length) {
+      if (parseNumberedLine(lines[scan])) {
+        blockEnd = scan;
+        scan += 1;
+        continue;
+      }
+      if (isBlankLine(lines[scan])) {
+        scan += 1;
+        continue;
+      }
+      break;
     }
-    const blockEnd = line;
     if (blockEnd >= touchStart && blockStart <= touchEnd) {
       renumberBlock(lines, blockStart, blockEnd);
     }
-    line += 1;
+    line = scan;
   }
 }
 
 function renumberBlock(lines: string[], start: number, end: number): void {
-  const parsed = lines.slice(start, end + 1).map((line) => parseNumberedLine(line));
-  const columns = parsed.map((line) => indentationColumns(line?.indent ?? ""));
+  const entries: Array<{ line: number; parsed: ParsedNumberedLine; columns: number }> = [];
+  for (let line = start; line <= end; line += 1) {
+    const parsed = parseNumberedLine(lines[line]);
+    if (parsed) {
+      entries.push({ line, parsed, columns: indentationColumns(parsed.indent) });
+    }
+  }
+  if (entries.length === 0) {
+    return;
+  }
+
+  const columns = entries.map((entry) => entry.columns);
   const base = Math.min(...columns);
   const baseIndex = columns.indexOf(base);
-  const baseIndent = parsed[baseIndex]?.indent ?? "";
+  const baseIndent = entries[baseIndex].parsed.indent;
   const unit = detectIndentWidth(columns, base);
   const counters: number[] = [];
   let previousDepth = 0;
-  for (let index = 0; index < parsed.length; index += 1) {
-    const item = parsed[index];
-    if (!item) {
-      continue;
-    }
+  for (let index = 0; index < entries.length; index += 1) {
+    const entry = entries[index];
+    const item = entry.parsed;
     const rawDepth = Math.max(0, Math.round((columns[index] - base) / unit));
     const depth = index === 0 ? 0 : Math.min(rawDepth, previousDepth + 1);
     if (depth > previousDepth) {
@@ -323,20 +347,38 @@ function renumberBlock(lines: string[], start: number, end: number): void {
     // Two leading spaces per depth therefore keep each item's content start on
     // a stable four-column rhythm instead of moving six columns per level.
     const normalizedIndent = `${baseIndent}${HIERARCHY_INDENT.repeat(depth)}`;
-    lines[start + index] = `${normalizedIndent}${counters.join(".")}. ${item.content}`;
+    lines[entry.line] = `${normalizedIndent}${counters.join(".")}. ${item.content}`;
   }
 }
 
 function numberedBlockBounds(lines: string[], line: number): { start: number; end: number } {
   let start = line;
   let end = line;
-  while (start > 0 && parseNumberedLine(lines[start - 1])) {
-    start -= 1;
+  while (start > 0) {
+    let candidate = start - 1;
+    while (candidate >= 0 && isBlankLine(lines[candidate])) {
+      candidate -= 1;
+    }
+    if (candidate < 0 || !parseNumberedLine(lines[candidate])) {
+      break;
+    }
+    start = candidate;
   }
-  while (end + 1 < lines.length && parseNumberedLine(lines[end + 1])) {
-    end += 1;
+  while (end + 1 < lines.length) {
+    let candidate = end + 1;
+    while (candidate < lines.length && isBlankLine(lines[candidate])) {
+      candidate += 1;
+    }
+    if (candidate >= lines.length || !parseNumberedLine(lines[candidate])) {
+      break;
+    }
+    end = candidate;
   }
   return { start, end };
+}
+
+function isBlankLine(line: string): boolean {
+  return line.trim().length === 0;
 }
 
 function detectIndentToken(lines: string[], start: number, end: number): string {

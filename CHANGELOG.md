@@ -3,6 +3,20 @@
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and use [Semantic Versioning](https://semver.org/).
 
+## [0.3.3] - 2026-08-28
+
+### Fixed
+
+- Renumber downstream root items after an inserted item is indented into an
+  intermediate level, including numbered blocks separated by blank lines.
+- Replaced stale marketplace copy with the final public author and a concise,
+  action-oriented description.
+
+### Added
+
+- Added an automated Enter-then-Tab regression test for the intermediate-level
+  insertion workflow.
+
 ## [0.3.2] - 2026-08-24
 
 ### Fixed

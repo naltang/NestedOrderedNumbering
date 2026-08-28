@@ -1,9 +1,9 @@
 {
   "id": "nested-ordered-numbering",
   "name": "Nested Ordered Numbering",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "minAppVersion": "1.5.0",
-  "description": "Create hierarchical text numbering that always ends with a period.",
+  "description": "Create and maintain hierarchical plain-text numbering with a trailing period at every depth.",
   "author": "spark00000",
   "authorUrl": "https://github.com/spark00000",
   "isDesktopOnly": false
