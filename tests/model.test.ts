@@ -73,6 +73,31 @@ describe("editing transforms", () => {
     expect(result?.selection.anchor).toBe(result?.text.length);
   });
 
+  it("Enter on an empty numbered item exits numbering with one plain blank line", () => {
+    const input = "1. First\n2. Second\n3. ";
+    const result = transformEnter(input, { anchor: input.length, head: input.length });
+    const expected = "1. First\n2. Second\n";
+    expect(result?.text).toBe(expected);
+    expect(result?.selection).toEqual({ anchor: expected.length, head: expected.length });
+  });
+
+  it("renumbers following items after an empty numbered item exits numbering", () => {
+    const input = "1. First\n2. \n3. Third";
+    const cursor = input.indexOf("2. ") + "2. ".length;
+    const result = transformEnter(input, { anchor: cursor, head: cursor });
+    const expected = "1. First\n\n2. Third";
+    const blankLineStart = expected.indexOf("\n") + 1;
+    expect(result?.text).toBe(expected);
+    expect(result?.selection).toEqual({ anchor: blankLineStart, head: blankLineStart });
+  });
+
+  it("Enter removes an empty nested prefix and its indentation", () => {
+    const input = "1. Root\n  1.1.    ";
+    const result = transformEnter(input, { anchor: input.length, head: input.length });
+    expect(result?.text).toBe("1. Root\n");
+    expect(result?.selection.anchor).toBe(result?.text.length);
+  });
+
   it("Tab indents the current item and its subtree", () => {
     const input = "1. Alpha\n2. Beta\n    2.1. Child\n3. Gamma";
     const cursor = input.indexOf("Beta");

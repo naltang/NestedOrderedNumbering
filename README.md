@@ -41,7 +41,9 @@ block in one undoable editor transaction.
 ## Features
 
 - Always emits `1.`, `1.1.`, `1.1.1.`, and deeper forms with a final period.
-- Enter creates the next item at the same depth.
+- Enter creates the next item at the same depth when the current item has content.
+- Enter on a prefix-only item such as `1.3. ` removes the prefix and leaves one
+  plain blank line, so the next input can be ordinary text or a Markdown heading.
 - Tab indents the current item or selected subtree.
 - Shift+Tab outdents a subtree; at the root it converts the item to plain text.
 - Multi-line selections are supported.
@@ -78,7 +80,7 @@ decoration remove only those visual offsets from recognized numbering lines.
 
 | Key | Action |
 |---|---|
-| Enter | Create the next sibling |
+| Enter | Create the next sibling; on a prefix-only item, exit numbering |
 | Tab | Indent the item/selected subtree |
 | Shift+Tab | Outdent, or remove numbering at root |
 | Ctrl+Z | Undo the complete operation |

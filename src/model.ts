@@ -110,6 +110,15 @@ export function transformEnter(text: string, selection: TextSelection): Transfor
     return null;
   }
 
+  if (parsed.content.trim().length === 0) {
+    const rawLines = [...lines];
+    rawLines[position.line] = "";
+    renumberLines(rawLines, position.line, position.line);
+    const resultText = rawLines.join("\n");
+    const cursor = positionToOffset(resultText, { line: position.line, ch: 0 });
+    return { text: resultText, selection: { anchor: cursor, head: cursor } };
+  }
+
   const placeholder = `${parsed.segments.map(() => "0").join(".")}.`;
   const insertion = `\n${parsed.indent}${placeholder} `;
   const rawText = `${text.slice(0, selection.head)}${insertion}${text.slice(selection.head)}`;

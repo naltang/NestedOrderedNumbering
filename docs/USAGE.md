@@ -11,6 +11,10 @@ Type a root item with a final period and a space:
 Press Enter to create `2. `. Press Tab on `2.` to make it `1.1.` below the first
 item. Tab and Shift+Tab move the selected item together with its numbered subtree.
 
+If an item contains only its prefix, such as `1.3. `, press Enter once to remove
+that prefix and leave one plain blank line. You can then type ordinary text or a
+Markdown heading such as `### 1.3.` without creating `1.4. `.
+
 ## Convert a root item to plain text
 
 Place the cursor anywhere in a root item and press Shift+Tab. `1. Heading-like text`

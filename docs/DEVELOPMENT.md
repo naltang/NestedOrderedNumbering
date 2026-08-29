@@ -36,7 +36,8 @@ Use a disposable vault for manual testing. Copy `main.js`, `manifest.json`, and
 ## Test matrix
 
 - Parser accepts only prefixes with the final period.
-- Enter creates same-depth siblings.
+- Enter creates same-depth siblings when the current item has content.
+- Enter on a prefix-only item exits numbering and leaves one plain blank line.
 - Tab and Shift+Tab preserve subtrees.
 - Root Shift+Tab produces plain text.
 - Multi-line selections remain atomic.

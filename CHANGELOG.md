@@ -3,6 +3,13 @@
 All notable changes follow [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and use [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Pressing Enter on a prefix-only item now removes the prefix and leaves one
+  plain blank line instead of generating another numbered item.
+
 ## [0.3.3] - 2026-08-28
 
 ### Fixed
