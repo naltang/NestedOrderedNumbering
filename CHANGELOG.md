@@ -5,10 +5,17 @@ and use [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-08-30
+
 ### Fixed
 
 - Pressing Enter on a prefix-only item now removes the prefix and leaves one
   plain blank line instead of generating another numbered item.
+
+### Changed
+
+- Shortened internal command IDs so Obsidian can add the plugin ID without
+  duplication. Reassign custom command hotkeys after upgrading if necessary.
 
 ## [0.3.3] - 2026-08-28
 

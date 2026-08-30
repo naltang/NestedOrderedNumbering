@@ -80,17 +80,17 @@ export default class NestedOrderedNumberingPlugin extends Plugin {
     this.registerEditorExtension(numberedLineViewPlugin);
 
     this.addEditorCommand(
-      "insert-nested-ordered-numbering",
+      "insert-numbering",
       "Insert nested ordered numbering",
       transformInsertNumbering,
     );
     this.addEditorCommand(
-      "delete-nested-ordered-numbering",
+      "delete-numbering",
       "Delete nested ordered numbering",
       transformDeleteNumbering,
     );
     this.addEditorCommand(
-      "renumber-nested-ordered-block",
+      "renumber-block",
       "Renumber nested ordered block",
       transformRenumber,
     );

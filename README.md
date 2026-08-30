@@ -152,11 +152,10 @@ See [Development](docs/DEVELOPMENT.md), [Usage](docs/USAGE.md), and
 
 ## Release status
 
-Release [`0.3.3`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.3)
-is published with verified `main.js`, `manifest.json`, and `styles.css` assets. The
-remaining pre-submission checks are the documented manual Vault and theme tests.
-Run the release gate before every future tag as described in
-[Publishing](docs/PUBLISHING.md).
+Release [`0.3.4`](https://github.com/spark00000/NestedOrderedNumbering/releases/tag/0.3.4)
+is the current Community directory submission candidate. Its release assets are
+rebuilt from source by GitHub Actions. Run the release gate before every future
+tag as described in [Publishing](docs/PUBLISHING.md).
 
 ## License
 
