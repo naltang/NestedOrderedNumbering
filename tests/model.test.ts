@@ -149,4 +149,10 @@ describe("editing transforms", () => {
     const result = transformDeleteNumbering(input, { anchor: 0, head: input.indexOf("\n") });
     expect(result?.text).toBe("Alpha\n1. Beta");
   });
+
+  it("insert numbering leaves blank separator lines blank", () => {
+    const input = "Alpha\n\nBeta";
+    const result = transformInsertNumbering(input, { anchor: 0, head: input.length });
+    expect(result?.text).toBe("1. Alpha\n\n2. Beta");
+  });
 });

@@ -232,11 +232,12 @@ export function transformInsertNumbering(text: string, selection: TextSelection)
   const selected = selectedLineBounds(text, selection);
   let inserted = false;
   for (let line = selected.start; line <= selected.end; line += 1) {
-    if (parseNumberedLine(rawLines[line])) {
+    const current = rawLines[line];
+    if (parseNumberedLine(current) || isBlankLine(current)) {
       continue;
     }
-    const indent = /^([ \t]*)/.exec(rawLines[line])?.[1] ?? "";
-    rawLines[line] = `${indent}0. ${rawLines[line].slice(indent.length)}`;
+    const indent = /^([ \t]*)/.exec(current)?.[1] ?? "";
+    rawLines[line] = `${indent}0. ${current.slice(indent.length)}`;
     inserted = true;
   }
   if (!inserted) {
