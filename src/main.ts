@@ -20,6 +20,7 @@ import {
   offsetToPosition,
   parseNumberedLine,
   positionToOffset,
+  protectedLines,
   transformDeleteNumbering,
   transformEnter,
   transformIndent,
@@ -159,12 +160,13 @@ export default class NestedOrderedNumberingPlugin extends Plugin {
 }
 
 function buildNumberedLineDecorations(view: EditorView): DecorationSet {
+  const protectedSet = protectedLines(view.state.doc.toString());
   const lineStarts = new Set<number>();
   for (const range of view.visibleRanges) {
     let position = range.from;
     while (position <= range.to) {
       const line = view.state.doc.lineAt(position);
-      if (parseNumberedLine(line.text)) {
+      if (!protectedSet.has(line.number - 1) && parseNumberedLine(line.text)) {
         lineStarts.add(line.from);
       }
       if (line.to >= range.to) {

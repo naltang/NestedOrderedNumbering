@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   parseNumberedLine,
+  protectedLines,
   renumberText,
   transformDeleteNumbering,
   transformEnter,
@@ -174,3 +175,105 @@ describe("editing transforms", () => {
     );
   });
 });
+
+describe("protected regions", () => {
+  const fenced = [
+    "```bash",
+    "7. echo first",
+    "8. echo second",
+    "9. echo third",
+    "```",
+    "",
+    "4. Real item",
+  ].join("\n");
+
+  it("renumbers nothing inside a fenced code block", () => {
+    expect(renumberText(fenced)).toBe(
+      "```bash\n7. echo first\n8. echo second\n9. echo third\n```\n\n1. Real item",
+    );
+  });
+
+  it("treats a fence as a boundary so blocks on both sides stay independent", () => {
+    expect(renumberText("4. Above\n```\ncode\n```\n9. Below")).toBe(
+      "1. Above\n```\ncode\n```\n1. Below",
+    );
+  });
+
+  it("does not join blocks across a blank line inside a fence", () => {
+    expect(renumberText("1. Above\n```\n\n```\n1. Below")).toBe(
+      "1. Above\n```\n\n```\n1. Below",
+    );
+  });
+
+  it("protects a display math block", () => {
+    const input = "$$\n7. x_1\n8. x_2\n$$\n\n9. After";
+    expect(renumberText(input)).toBe("$$\n7. x_1\n8. x_2\n$$\n\n1. After");
+  });
+
+  it("protects YAML frontmatter", () => {
+    const input = "---\ntitle: Demo\n4. stale key\n---\n\n9. Body";
+    expect(renumberText(input)).toBe("---\ntitle: Demo\n4. stale key\n---\n\n1. Body");
+  });
+
+  it("keeps numbering active when a leading --- has no closing delimiter", () => {
+    // An unterminated `---` is a thematic break, not frontmatter, so the note
+    // must not be treated as protected from end to end.
+    const input = "---\n\n4. Alpha\n5. Beta";
+    expect(renumberText(input)).toBe("---\n\n1. Alpha\n2. Beta");
+  });
+
+  it("protects an unterminated fence through the end of the document", () => {
+    const input = "1. Above\n```\n5. never closed";
+    expect(renumberText(input)).toBe(input);
+  });
+
+  it("protects the remainder after a tilde fence", () => {
+    expect(renumberText("1. Above\n~~~\n7. x")).toBe("1. Above\n~~~\n7. x");
+  });
+
+  it("closes a longer fence only with an equally long or longer run", () => {
+    const input = "````\n7. inside\n```\n8. still inside\n````\n\n9. After";
+    expect(renumberText(input)).toBe("````\n7. inside\n```\n8. still inside\n````\n\n1. After");
+  });
+
+  it("leaves Enter inside a fence to the default editor behavior", () => {
+    const lines = fenced.split("\n");
+    const cursor = input2offset(lines, lines.indexOf("8. echo second"), "8. echo ");
+    expect(transformEnter(fenced, { anchor: cursor, head: cursor })).toBeNull();
+  });
+
+  it("leaves Tab inside a fence to the default editor behavior", () => {
+    const lines = fenced.split("\n");
+    const cursor = input2offset(lines, lines.indexOf("8. echo second"), "8. echo ");
+    expect(transformIndent(fenced, { anchor: cursor, head: cursor }, "indent")).toBeNull();
+    expect(transformIndent(fenced, { anchor: cursor, head: cursor }, "outdent")).toBeNull();
+  });
+
+  it("never numbers fence delimiters when inserting numbering", () => {
+    const input = "```bash\necho hi\n```\n\nnotes";
+    const result = transformInsertNumbering(input, { anchor: 0, head: input.length });
+    expect(result?.text).toBe("```bash\necho hi\n```\n\n1. notes");
+  });
+
+  it("keeps a code block intact while numbering the prose around it", () => {
+    // The fence is a block boundary, so the prose after it restarts at 1.
+    const input = "Steps:\n\n```bash\n7. echo first\n8. echo second\n```\n\nDone.";
+    const result = transformInsertNumbering(input, { anchor: 0, head: input.length });
+    expect(result?.text).toBe("1. Steps:\n\n```bash\n7. echo first\n8. echo second\n```\n\n1. Done.");
+  });
+
+  it("does not delete numbering inside a fence", () => {
+    const result = transformDeleteNumbering(fenced, { anchor: 0, head: fenced.length });
+    expect(result?.text).toBe(
+      "```bash\n7. echo first\n8. echo second\n9. echo third\n```\n\nReal item",
+    );
+  });
+
+  it("reports protected line numbers for decoration", () => {
+    expect([...protectedLines(fenced)]).toEqual([0, 1, 2, 3, 4]);
+  });
+});
+
+function input2offset(lines: string[], line: number, prefix: string): number {
+  return lines.slice(0, line).reduce((total, value) => total + value.length + 1, 0) + prefix.length;
+}

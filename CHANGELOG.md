@@ -5,6 +5,16 @@ and use [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Numbering no longer applies inside fenced code blocks, display math blocks, or
+  YAML frontmatter. Previously, running Insert Numbering across a selection that
+  spanned a fence numbered the ``` delimiters themselves and destroyed the code
+  block, and Enter, Tab, Shift+Tab, or Renumber Block rewrote code content.
+  Protected regions now also act as block boundaries, so items on either side
+  are numbered independently and the editor's default Enter and Tab behavior is
+  preserved inside a fence.
+
 ## [0.3.4] - 2026-08-30
 
 ### Fixed

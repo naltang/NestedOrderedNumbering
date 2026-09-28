@@ -105,6 +105,9 @@ export function transformEnter(text: string, selection: TextSelection): Transfor
   }
   const position = offsetToPosition(text, selection.head);
   const lines = text.split("\n");
+  if (scanProtectedLines(lines).has(position.line)) {
+    return null;
+  }
   const parsed = parseNumberedLine(lines[position.line]);
   if (!parsed || position.ch < parsed.contentStart) {
     return null;
@@ -143,9 +146,10 @@ export function transformIndent(
 ): TransformResult | null {
   const oldLines = text.split("\n");
   const selected = selectedLineBounds(text, selection);
+  const protectedSet = scanProtectedLines(oldLines);
   const numberedLines: number[] = [];
   for (let line = selected.start; line <= selected.end; line += 1) {
-    if (parseNumberedLine(oldLines[line])) {
+    if (!protectedSet.has(line) && parseNumberedLine(oldLines[line])) {
       numberedLines.push(line);
     }
   }
@@ -161,6 +165,9 @@ export function transformIndent(
   }
   const subtreeIndent = indentationColumns(lastParsed.indent);
   for (let line = last + 1; line < oldLines.length; line += 1) {
+    if (protectedSet.has(line)) {
+      break;
+    }
     if (isBlankLine(oldLines[line])) {
       continue;
     }
@@ -171,7 +178,7 @@ export function transformIndent(
     last = line;
   }
 
-  const bounds = numberedBlockBounds(oldLines, first);
+  const bounds = numberedBlockBounds(oldLines, first, protectedSet);
   const indentToken = detectIndentToken(oldLines, bounds.start, bounds.end);
   const firstParsed = parseNumberedLine(oldLines[first]);
   if (!firstParsed) {
@@ -182,6 +189,9 @@ export function transformIndent(
     const currentColumns = indentationColumns(firstParsed.indent);
     let hasPreviousSibling = false;
     for (let line = first - 1; line >= bounds.start; line -= 1) {
+      if (protectedSet.has(line)) {
+        break;
+      }
       if (isBlankLine(oldLines[line])) {
         continue;
       }
@@ -205,6 +215,9 @@ export function transformIndent(
 
   const rawLines = [...oldLines];
   for (let line = first; line <= last; line += 1) {
+    if (protectedSet.has(line)) {
+      continue;
+    }
     const parsed = parseNumberedLine(rawLines[line]);
     if (!parsed) {
       continue;
@@ -230,8 +243,12 @@ export function transformInsertNumbering(text: string, selection: TextSelection)
   const oldLines = text.split("\n");
   const rawLines = [...oldLines];
   const selected = selectedLineBounds(text, selection);
+  const protectedSet = scanProtectedLines(oldLines);
   let inserted = false;
   for (let line = selected.start; line <= selected.end; line += 1) {
+    if (protectedSet.has(line)) {
+      continue;
+    }
     const current = rawLines[line];
     if (parseNumberedLine(current) || isBlankLine(current)) {
       continue;
@@ -252,8 +269,12 @@ export function transformDeleteNumbering(text: string, selection: TextSelection)
   const oldLines = text.split("\n");
   const rawLines = [...oldLines];
   const selected = selectedLineBounds(text, selection);
+  const protectedSet = scanProtectedLines(oldLines);
   let removed = false;
   for (let line = selected.start; line <= selected.end; line += 1) {
+    if (protectedSet.has(line)) {
+      continue;
+    }
     const parsed = parseNumberedLine(rawLines[line]);
     if (!parsed) {
       continue;
@@ -291,9 +312,10 @@ function selectedLineBounds(text: string, selection: TextSelection): { start: nu
 }
 
 function renumberLines(lines: string[], touchStart: number, touchEnd: number): void {
+  const protectedSet = scanProtectedLines(lines);
   let line = 0;
   while (line < lines.length) {
-    if (!parseNumberedLine(lines[line])) {
+    if (protectedSet.has(line) || !parseNumberedLine(lines[line])) {
       line += 1;
       continue;
     }
@@ -301,6 +323,9 @@ function renumberLines(lines: string[], touchStart: number, touchEnd: number): v
     let blockEnd = line;
     let scan = line + 1;
     while (scan < lines.length) {
+      if (protectedSet.has(scan)) {
+        break;
+      }
       if (parseNumberedLine(lines[scan])) {
         blockEnd = scan;
         scan += 1;
@@ -388,25 +413,29 @@ function deriveDepths(columns: number[], base: number): number[] {
   return depths;
 }
 
-function numberedBlockBounds(lines: string[], line: number): { start: number; end: number } {
+function numberedBlockBounds(
+  lines: string[],
+  line: number,
+  protectedSet: Set<number>,
+): { start: number; end: number } {
   let start = line;
   let end = line;
   while (start > 0) {
     let candidate = start - 1;
-    while (candidate >= 0 && isBlankLine(lines[candidate])) {
+    while (candidate >= 0 && !protectedSet.has(candidate) && isBlankLine(lines[candidate])) {
       candidate -= 1;
     }
-    if (candidate < 0 || !parseNumberedLine(lines[candidate])) {
+    if (candidate < 0 || protectedSet.has(candidate) || !parseNumberedLine(lines[candidate])) {
       break;
     }
     start = candidate;
   }
   while (end + 1 < lines.length) {
     let candidate = end + 1;
-    while (candidate < lines.length && isBlankLine(lines[candidate])) {
+    while (candidate < lines.length && !protectedSet.has(candidate) && isBlankLine(lines[candidate])) {
       candidate += 1;
     }
-    if (candidate >= lines.length || !parseNumberedLine(lines[candidate])) {
+    if (candidate >= lines.length || protectedSet.has(candidate) || !parseNumberedLine(lines[candidate])) {
       break;
     }
     end = candidate;
@@ -416,6 +445,78 @@ function numberedBlockBounds(lines: string[], line: number): { start: number; en
 
 function isBlankLine(line: string): boolean {
   return line.trim().length === 0;
+}
+
+// Numbering must never touch verbatim regions: fenced code, display math, and
+// YAML frontmatter all carry line content that happens to match the numbering
+// grammar. A protected line is a hard block boundary, so a fence also prevents
+// the blank-line rule from joining items across it.
+export function protectedLines(text: string): Set<number> {
+  return scanProtectedLines(text.split("\n"));
+}
+
+function scanProtectedLines(lines: string[]): Set<number> {
+  const protectedSet = new Set<number>();
+  let index = 0;
+
+  if (lines[0]?.trim() === "---") {
+    // Frontmatter needs a closing delimiter. Without one the leading `---` is a
+    // thematic break, and treating the rest of the note as frontmatter would
+    // silently disable numbering for the whole document.
+    const end = frontmatterEnd(lines);
+    if (end > 0) {
+      for (let line = 0; line <= end; line += 1) {
+        protectedSet.add(line);
+      }
+      index = end + 1;
+    }
+  }
+
+  let fence: string | null = null;
+  let inMath = false;
+  for (; index < lines.length; index += 1) {
+    const trimmed = lines[index].trim();
+    if (fence !== null) {
+      protectedSet.add(index);
+      if (isClosingFence(trimmed, fence)) {
+        fence = null;
+      }
+      continue;
+    }
+    if (inMath) {
+      protectedSet.add(index);
+      if (trimmed === "$$") {
+        inMath = false;
+      }
+      continue;
+    }
+    const opening = /^(?:`{3,}|~{3,})/.exec(trimmed);
+    if (opening) {
+      fence = opening[0];
+      protectedSet.add(index);
+      continue;
+    }
+    if (trimmed === "$$") {
+      inMath = true;
+      protectedSet.add(index);
+    }
+  }
+  return protectedSet;
+}
+
+function frontmatterEnd(lines: string[]): number {
+  for (let line = 1; line < lines.length; line += 1) {
+    const trimmed = lines[line].trim();
+    if (trimmed === "---" || trimmed === "...") {
+      return line;
+    }
+  }
+  return -1;
+}
+
+function isClosingFence(trimmed: string, opening: string): boolean {
+  const match = /^(`{3,}|~{3,})\s*$/.exec(trimmed);
+  return match !== null && match[1][0] === opening[0] && match[1].length >= opening.length;
 }
 
 function detectIndentToken(lines: string[], start: number, end: number): string {
